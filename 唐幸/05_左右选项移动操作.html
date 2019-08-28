@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>左右选项移动操作</title>
+    <script src="jquery-1.11.3.min.js"></script>
+    <style>
+        select {
+            width: 100px;
+            height: 85px;
+        }
+
+        div {
+            display: inline-block;
+            width: 50px
+        }
+    </style>
+</head>
+
+<body>
+    <select id="first" size="5" multiple>
+        <option>Argentina</option>
+        <option>Brazil</option>
+        <option>Canada</option>
+        <option>Chile</option>
+        <option>China</option>
+        <option>Cuba</option>
+        <option>Denmark</option>
+        <option>Egypt</option>
+        <option>France</option>
+        <option>Greece</option>
+        <option>Spain</option>
+    </select>
+    <div>
+        <button id="add">&gt;</button>
+        <button id="add_all">&gt;&gt;</button>
+        <button id="remove">&lt;</button>
+        <button id="remove_all">&lt;&lt;</button>
+    </div>
+    <select id="second" size="5" multiple>
+    </select>
+    <script>
+        var arr_l = [];
+        var arr_r = [];
+        var arr = [];
+        var num_l=[];
+        var num_r=[];
+        for (let i = 0; i < $("#first option").length; i++) {
+            arr_l.push($("#first option")[i].innerHTML);
+        }
+        // console.log(arr_l);
+        $("#first").change(function () {
+            num_l=[];
+            for (let i = 0; i < $("#first option").length; i++) {
+                if ($("#first option")[i].selected) {
+                    num_l.push(i);
+                }
+            }
+            console.log(num_l);
+        })
+        $("#second").change(function () {
+            num_r=[];
+            for (let i = 0; i < $("#second option").length; i++) {
+                if ($("#second option")[i].selected) {
+                    num_r.push(i);
+                }
+            }
+            console.log(num_r);
+        })
+        $("button").click(function () {
+            // console.log(this);
+            if ($(this).html() == "&gt;&gt;") {
+                arr = arr_l;
+                arr_l = [];
+                for (let i = 0; i < arr.length; i++) {
+                    arr_r.push(arr[i]);
+                }
+                num_l=[];
+                num_r=[];
+                show();
+            } else if ($(this).html() == "&lt;&lt;") {
+                arr = arr_r;
+                arr_r = [];
+                for (let i = 0; i < arr.length; i++) {
+                    arr_l.push(arr[i]);
+                }
+                num_l=[];
+                num_r=[];
+                show();
+            } else if ($(this).html() == "&gt;") {
+                for(let i=num_l.length-1;i>=0;i--){
+                    arr_r.push(arr_l.splice(num_l[i],1));
+                }
+                show();
+                num_l=[];
+                num_r=[];
+            }else{
+                for(let i=num_r.length-1;i>=0;i--){
+                    arr_l.push(arr_r.splice(num_r[i],1));
+                }
+                show();
+                num_l=[];
+                num_r=[];
+            }
+        })
+
+        function show() {
+            arr_l.sort();
+            arr_r.sort();
+            $("#first").html("");
+            $("#second").html("");
+            for (let i = 0; i < arr_l.length; i++) {
+                $("#first").append($("<option></option>").html(arr_l[i]));
+            }
+            for (let i = 0; i < arr_r.length; i++) {
+                $("#second").append($("<option></option>").html(arr_r[i]));
+            }
+        }
+    </script>
+</body>
+
+</html>
